@@ -3,18 +3,36 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "cors": "^2.8.4",
+    "eslint-config-airbnb": "^17.1.0",
+    "express": "^4.16.4",
+    "prop-types": "^15.6.2",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
-    "react-scripts": "2.0.5"
+    "react-fontawesome": "^1.6.1",
+    "react-scripts": "2.0.5",
+    "request": "^2.88.0",
+    "styled-components": "^4.0.2"
   },
   "scripts": {
     "start": "react-scripts start",
+    "proxy": "clear && node ./proxy/ExpressServer.js",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": [
+      "airbnb"
+    ],
+    "rules": {
+      "react/jsx-filename-extension": 0
+    },
+    "parser": "babel-eslint",
+    "globals": {
+      "fetch": false,
+      "document": false
+    }
   },
   "browserslist": [
     ">0.2%",
