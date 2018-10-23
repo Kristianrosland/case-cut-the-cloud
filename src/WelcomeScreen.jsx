@@ -72,6 +72,27 @@ class WelcomeScreen extends React.Component {
     };
   }
 
+  submit = () => {
+    const { callback } = this.props;
+    const { fstName, sndName, board } = this.state;
+
+    if (this.isValid()) {
+      callback(board, fstName, sndName);
+    }
+  }
+
+  handleKeyPress = (e) => {
+    if (e.key === 'Enter' && this.isValid()) {
+      this.submit();
+    }
+  }
+
+  isValid = () => {
+    const { fstName, sndName, fetchStatus } = this.state;
+
+    return fstName && sndName && fetchStatus === 'OK';
+  }
+
   changeBoardNumber = (event) => {
     const boardNum = event.target.value;
     const boardsUrl = 'http://localhost:5000/proxy/boards';
@@ -106,9 +127,8 @@ class WelcomeScreen extends React.Component {
 
   render() {
     const {
-      fstName, sndName, board, boardNumber, fetchStatus, loading,
+      fstName, sndName, boardNumber, fetchStatus, loading,
     } = this.state;
-    const { callback } = this.props;
 
     return (
       <StyledWrapper>
@@ -116,11 +136,13 @@ class WelcomeScreen extends React.Component {
           value={fstName}
           placeholder="Navn på spiller 1"
           onChange={e => this.setState({ fstName: e.target.value })}
+          onKeyPress={this.handleKeyPress}
         />
         <NameInput
           value={sndName}
           placeholder="Navn på spiller 2"
           onChange={e => this.setState({ sndName: e.target.value })}
+          onKeyPress={this.handleKeyPress}
         />
         <FlexRow>
           { (loading || fetchStatus) && <Filler />}
@@ -129,6 +151,7 @@ class WelcomeScreen extends React.Component {
             placeholder="Brettnummer"
             type="number"
             onChange={this.changeBoardNumber}
+            onKeyPress={this.handleKeyPress}
           />
 
           { loading && <Icon name="cog" spin color={colors.primaryGray} /> }
@@ -136,8 +159,8 @@ class WelcomeScreen extends React.Component {
           { !loading && fetchStatus === 'ERROR' && <Icon name="times-circle" color="red" /> }
         </FlexRow>
         <StartButton
-          disabled={fetchStatus !== 'OK'}
-          onClick={() => callback(board, fstName, sndName)}
+          disabled={!this.isValid()}
+          onClick={this.submit}
         >
                     Start spillet
         </StartButton>
